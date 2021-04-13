@@ -45,28 +45,30 @@ app.get("/", (req, res) => {
 
 
     app.post('/appointmentsByDate', (req, res) => {
-        const date = req.body;
-
-        AppointmentCollection.find()
-        .toArray((err, doc) => {
-            const appointment = doc.filter(obj => obj.date === date.date)
-            if (appointment.length > 0) {
-                res.send(appointment)
-            }
-            else{
-                res.send([])
-            }
-        })
+      const date = req.body;
+      const email = req.body.email;
+      doctorCollection.find({ email: email })
+          .toArray((err, doctors) => {
+              const filter = { date: date.date }
+              if (doctors.length === 0) {
+                  filter.email = email;
+              }
+              AppointmentCollection.find(filter)
+                  .toArray((err, documents) => {
+                      console.log(email, date.date, doctors, documents)
+                      res.send(documents);
+                  })
+          })
     })
+
+
     app.post('/addDoctor', function(req, res) {
       const file = req.files.file;
       const name = req.body.name;
       const email = req.body.email;
       const newImg = file.data;
       const encImg = newImg.toString('base64');
-
-
-      var image = {
+      const image = {
           contentType: file.mimetype,
           size: file.size,
           img: Buffer.from(encImg, 'base64')
@@ -95,6 +97,15 @@ app.get("/", (req, res) => {
                 res.send(documents);
             })
     });
+
+    app.post('/isDoctor', (req, res) => {
+        const email = req.body.email;
+        doctorCollection.find({ email: email })
+            .toArray((err, doctors) => {
+                console.log("🚀 ~ file: index.js ~ line 103 ~ .toArray ~ doctors", doctors)
+                res.send(doctors.length > 0);
+            })
+    })
 
 
     console.log(" ======DATABASE CONNECTED ======");
