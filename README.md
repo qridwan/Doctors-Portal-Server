@@ -1,6 +1,7 @@
 # Doctors-Portal-Server
 
-- Client site is cloned
-- I worked here in backend using MongoDB NodeJS and Express.
-
+- Used MongoDB NodeJS and Express.
+- CRUD system deployed
 [Live](https://doctorsportalio.web.app/)
+
+[Client_Side_Code](https://github.com/thisisrid/Doctors-Portal)
